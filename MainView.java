@@ -14,11 +14,11 @@ public class MainView {
 
     public MainView(){
         frame = new Frame("Main Frame");
-        for (int i = 1; i < 11; i++){
-            buttons.add(new Button("Button" + i));
-        }
     }
-    public void showView(){
+    public void showView(File[] files){
+        for (int i = 0; i < files.length; i++){
+            buttons.add(new Button(files[i].getName()));
+        }
         frame.setSize(200,200);
         frame.setLayout(new FlowLayout());
         for (int i = 0; i < buttons.size(); i++){
@@ -32,19 +32,17 @@ public class MainView {
         });
         frame.setVisible(true);
     }
-    public void showDirectoryChooser() {
+    public File[] showDirectoryChooser() {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = chooser.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File currentDirectory = chooser.getSelectedFile();
-            System.out.println("File in Directory " + currentDirectory);
             File[] filesinFolder = currentDirectory.listFiles();
-            for (int i = 0; i < filesinFolder.length; i++){
-                System.out.println(filesinFolder[i].getName());
+            return filesinFolder;
             }
-
-
+        else {
+            return null;
         }
     }
 }
