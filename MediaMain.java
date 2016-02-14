@@ -13,7 +13,9 @@ public class MediaMain {
     public static void main(String[] args) {
         MainView mv = new MainView();
         File[] list = mv.showDirectoryChooser();
-        ;
+        mv.showView(list);
+
+
 
 
         //mv.showView();

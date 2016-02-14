@@ -15,7 +15,7 @@ public class MainView {
     public MainView(){
         frame = new Frame("Main Frame");
     }
-    public void showView(File[] files){
+    public void showView(final File[] files){
         for (int i = 0; i < files.length; i++){
             buttons.add(new Button(files[i].getName()));
         }
@@ -23,6 +23,16 @@ public class MainView {
         frame.setLayout(new FlowLayout());
         for (int i = 0; i < buttons.size(); i++){
             frame.add(buttons.get(i));
+        }
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    for (int i = 0; i < files.length;i++) {
+                        if (files[i].getName().equals())
+                    }
+                }
+            });
         }
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -40,9 +50,10 @@ public class MainView {
             File currentDirectory = chooser.getSelectedFile();
             File[] filesinFolder = currentDirectory.listFiles();
             return filesinFolder;
-            }
+        }
         else {
             return null;
         }
     }
+
 }
