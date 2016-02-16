@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by shark on 2/5/2016.
+ * Note to self: It may be in my best interest to slpit some of this up into deffernet and easier to debug methods. Especially if it is to become a project to work on longer than a few months.
  */
 public class MainView {
     Frame frame;

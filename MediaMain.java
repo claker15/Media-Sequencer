@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
- * Created by shark on 2/5/2016.
+ * 
  */
 public class MediaMain {
 
