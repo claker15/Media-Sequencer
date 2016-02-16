@@ -3,6 +3,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -28,8 +29,16 @@ public class MainView {
             buttons.get(i).addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    for (int i = 0; i < files.length;i++) {
-                        if (files[i].getName().equals())
+                    Button source = (Button) e.getSource();
+                    for (int j = 0; j < files.length; j++) {
+                        if (source.getLabel().equals(files[j].getName())) {
+                            try {
+                                Desktop.getDesktop().open(files[j]);
+                                frame.remove(source);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
                     }
                 }
             });
