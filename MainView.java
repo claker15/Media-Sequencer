@@ -2,8 +2,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 /**
@@ -12,13 +12,14 @@ import java.util.ArrayList;
 public class MainView {
     Frame frame;
     ArrayList<Button> buttons = new ArrayList<Button>();
+    ArrayList<File> filelist = new ArrayList<File>();
 
     public MainView(){
         frame = new Frame("Main Frame");
     }
-    public void showView(final File[] files){
-        for (int i = 0; i < files.length; i++){
-            buttons.add(new Button(files[i].getName()));
+    public void showView(final ArrayList<File> files){
+        for (int i = 0; i < files.size(); i++){
+            buttons.add(new Button(files.get(i).getName()));
         }
         frame.setSize(200,200);
         frame.setLayout(new FlowLayout());
@@ -30,11 +31,12 @@ public class MainView {
 
                 public void actionPerformed(ActionEvent e) {
                     Button source = (Button) e.getSource();
-                    for (int j = 0; j < files.length; j++) {
-                        if (source.getLabel().equals(files[j].getName())) {
+                    for (int j = 0; j < files.size(); j++) {
+                        if (source.getLabel().equals(files.get(j).getName())) {
                             try {
-                                Desktop.getDesktop().open(files[j]);
+                                Desktop.getDesktop().open(files.get(j));
                                 frame.remove(source);
+                                addToViewedMedia(files.get(j));
                             } catch (IOException e1) {
                                 e1.printStackTrace();
                             }
@@ -51,17 +53,64 @@ public class MainView {
         });
         frame.setVisible(true);
     }
-    public File[] showDirectoryChooser() {
+    public ArrayList<File> showDirectoryChooser() {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = chooser.showOpenDialog(frame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File currentDirectory = chooser.getSelectedFile();
             File[] filesinFolder = currentDirectory.listFiles();
-            return filesinFolder;
+            for (int i = 0; i < filesinFolder.length; i++) {
+                filelist.add(filesinFolder[i]);
+            }
+            ArrayList<File >filelist1 = filterArrayList(filelist);
+            return filelist1;
         }
         else {
             return null;
+        }
+    }
+    public ArrayList<File> filterArrayList(ArrayList<File> list) {
+        File viewedList = new File("viewedcontent.txt");
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(viewedList));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (line.equals(list.get(i).getPath())) {
+                        list.remove(i);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+    }
+    public void addToViewedMedia(File file) {
+        File fileWritingTo = new File("viewedcontent.txt");
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(fileWritingTo, true));
+            writer.append(file.toString() + '\n');
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
