@@ -14,6 +14,7 @@ public class MainView {
     ArrayList<Button> buttons = new ArrayList<Button>();
     ArrayList<File> filelist = new ArrayList<File>();
 
+
     public MainView(){
         frame = new Frame("Main Frame");
     }
@@ -23,8 +24,8 @@ public class MainView {
         }
         frame.setSize(200,200);
         frame.setLayout(new FlowLayout());
-        for (int i = 0; i < buttons.size(); i++){
-            frame.add(buttons.get(i));
+        for (int j = 0; j < buttons.size(); j++){
+            frame.add(buttons.get(j));
         }
         for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).addActionListener(new ActionListener() {
@@ -32,7 +33,7 @@ public class MainView {
                 public void actionPerformed(ActionEvent e) {
                     Button source = (Button) e.getSource();
                     for (int j = 0; j < files.size(); j++) {
-                        if (source.getLabel().equals(files.get(j).getName())) {
+                        if (source.getLabel().equals(files.get(j).getName()) && files.get(j).isFile()) {
                             try {
                                 Desktop.getDesktop().open(files.get(j));
                                 frame.remove(source);
@@ -40,6 +41,18 @@ public class MainView {
                             } catch (IOException e1) {
                                 e1.printStackTrace();
                             }
+                        }
+                        else if (source.getLabel().equals(files.get(j).getName()) && files.get(j).isDirectory()) {
+                            File[] tempFiles = files.get(j).listFiles();
+                            ArrayList<File> temp = new ArrayList<File>();
+                            for (int i = 0; i < tempFiles.length; i++) {
+                                temp.add(tempFiles[i]);
+                            }
+                            for (int k = 0; k < buttons.size(); k++) {
+                                frame.remove(buttons.get(k));
+                            }
+                            buttons.clear();
+                            showView(filterArrayList(temp));
                         }
                     }
                 }
