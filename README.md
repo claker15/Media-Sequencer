@@ -1,5 +1,6 @@
 # Media-Sequencer
-Features to add: If  a file is a directory, on button hit, create a new button windows with its contents. This could be repeated as needed.
+-Feb 19, 2016
+Added directory fuctionality, in that, if one file was a directory, a new windows with new buttons were made. This is the same throughout all levels. Next would be a way to go back to another set of buttons, or make new windows instead of overwriting buttons.
 
 
 -Feb 16, 2016
