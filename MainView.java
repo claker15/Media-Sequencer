@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * Note to self: It may be in my best interest to slpit some of this up into deffernet and easier to debug methods. Especially if it is to become a project to work on longer than a few months.
@@ -13,12 +14,25 @@ public class MainView {
     Frame frame;
     ArrayList<Button> buttons = new ArrayList<Button>();
     ArrayList<File> filelist = new ArrayList<File>();
+    Stack<ArrayList> fileListStack = new Stack<ArrayList>();
+
 
 
     public MainView(){
         frame = new Frame("Main Frame");
     }
     public void showView(final ArrayList<File> files){
+        buttons.add(new Button("Up Directory"));
+        buttons.get(0).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (int g = 0; g < buttons.size(); g++){
+                    frame.remove(buttons.get(g));
+                }
+                buttons.clear();
+                ArrayList<File> temp1 = filterUpDirButton(fileListStack.pop());
+                showView(filterArrayList(temp1));
+            }
+        });
         for (int i = 0; i < files.size(); i++){
             buttons.add(new Button(files.get(i).getName()));
         }
@@ -27,7 +41,7 @@ public class MainView {
         for (int j = 0; j < buttons.size(); j++){
             frame.add(buttons.get(j));
         }
-        for (int i = 0; i < buttons.size(); i++) {
+        for (int i = 1; i < buttons.size(); i++) {
             buttons.get(i).addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -43,6 +57,7 @@ public class MainView {
                             }
                         }
                         else if (source.getLabel().equals(files.get(j).getName()) && files.get(j).isDirectory()) {
+                            fileListStack.push(files);
                             File[] tempFiles = files.get(j).listFiles();
                             ArrayList<File> temp = new ArrayList<File>();
                             for (int i = 0; i < tempFiles.length; i++) {
@@ -77,6 +92,7 @@ public class MainView {
                 filelist.add(filesinFolder[i]);
             }
             ArrayList<File >filelist1 = filterArrayList(filelist);
+            fileListStack.push(filelist1);
             return filelist1;
         }
         else {
@@ -125,6 +141,17 @@ public class MainView {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public ArrayList<File> filterUpDirButton(ArrayList<File> list) {
+        for (int i = 0; i< list.size(); i++) {
+            if (list.get(i).equals("Up Directory")) {
+                list.remove(i);
+            }
+            else {
+                continue;
+            }
+        }
+        return list;
     }
 
 }
