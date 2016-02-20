@@ -1,4 +1,9 @@
 # Media-Sequencer
+-Feb 20, 2016
+Added a dedicated button to move up a directory that was moved into. Next would be to spruce up the GUI and to 
+add conditions if values are mismatched and things of that nature.
+
+
 -Feb 19, 2016
 Added directory fuctionality, in that, if one file was a directory, a new windows with new buttons were made. This is the same throughout all levels. Next would be a way to go back to another set of buttons, or make new windows instead of overwriting buttons.
 
