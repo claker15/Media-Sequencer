@@ -3,7 +3,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -12,6 +11,8 @@ import java.util.Stack;
  */
 public class MainView {
     Frame frame;
+    JPanel panel;
+    JScrollPane scrollPane;
     ArrayList<Button> buttons = new ArrayList<Button>();
     ArrayList<File> filelist = new ArrayList<File>();
     Stack<ArrayList> fileListStack = new Stack<ArrayList>();
@@ -19,14 +20,16 @@ public class MainView {
 
 
     public MainView(){
-        frame = new Frame("Main Frame");
+        frame = new Frame("Media Sequencer");
+        panel = new JPanel();
+        scrollPane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
     public void showView(final ArrayList<File> files){
         buttons.add(new Button("Up Directory"));
         buttons.get(0).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                for (int g = 0; g < buttons.size(); g++){
-                    frame.remove(buttons.get(g));
+                for (int g = 0; g < buttons.size(); g++) {
+                    panel.remove(buttons.get(g));
                 }
                 buttons.clear();
                 ArrayList<File> temp1 = filterUpDirButton(fileListStack.pop());
@@ -36,10 +39,9 @@ public class MainView {
         for (int i = 0; i < files.size(); i++){
             buttons.add(new Button(files.get(i).getName()));
         }
-        frame.setSize(200,200);
-        frame.setLayout(new FlowLayout());
+        panel.setLayout(new GridLayout(0,3));
         for (int j = 0; j < buttons.size(); j++){
-            frame.add(buttons.get(j));
+            panel.add(buttons.get(j));
         }
         for (int i = 1; i < buttons.size(); i++) {
             buttons.get(i).addActionListener(new ActionListener() {
@@ -50,7 +52,7 @@ public class MainView {
                         if (source.getLabel().equals(files.get(j).getName()) && files.get(j).isFile()) {
                             try {
                                 Desktop.getDesktop().open(files.get(j));
-                                frame.remove(source);
+                                panel.remove(source);
                                 addToViewedMedia(files.get(j));
                             } catch (IOException e1) {
                                 e1.printStackTrace();
@@ -64,7 +66,7 @@ public class MainView {
                                 temp.add(tempFiles[i]);
                             }
                             for (int k = 0; k < buttons.size(); k++) {
-                                frame.remove(buttons.get(k));
+                                panel.remove(buttons.get(k));
                             }
                             buttons.clear();
                             showView(filterArrayList(temp));
@@ -79,6 +81,8 @@ public class MainView {
                 System.exit(0);
             }
         });
+        frame.add(scrollPane);
+        frame.setSize(200,200);
         frame.setVisible(true);
     }
     public ArrayList<File> showDirectoryChooser() {
